@@ -38,9 +38,9 @@ public class PlayerController : MonoBehaviour
     //velocidad del conejo en el eje x constante para un intervalo equivalente de tiempo
     private void FixedUpdate()
     {
-        if (GameManager.sharedInstance.currentGameState == GameState.inTheGame)
-            if (rigidBody.velocity.x < runningSpeed)
-                rigidBody.velocity = new Vector2(runningSpeed, rigidBody.velocity.y);
+        // if (GameManager.sharedInstance.currentGameState == GameState.inTheGame)
+        //     if (rigidBody.velocity.x < runningSpeed)
+        //         rigidBody.velocity = new Vector2(runningSpeed, rigidBody.velocity.y);
     }
 
     // Use this for initialization
