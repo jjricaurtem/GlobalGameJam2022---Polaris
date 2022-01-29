@@ -2,59 +2,59 @@
 
 public class PlayerController : MonoBehaviour
 {
+    private const string HighScoreKey = "highScore";
     public static PlayerController sharedInstance;
+    private static readonly int IsGrounded = Animator.StringToHash("isGrounded");
+    private static readonly int IsAlive = Animator.StringToHash("isAlive");
 
     public float jumpForce = 6.0f; //fuerza de salto
     public float runningSpeed = 3.0f; //vector para correr en direccion x
     public LayerMask groundLayerMask; //capa del suelo
     public Animator animator;
-    private readonly string highScoreKey = "highScore";
-    private Rigidbody2D rigidBody;
+    private Rigidbody2D _rigidBody;
 
-    private Vector3 startPosition;
+    private Vector3 _startPosition;
 
     //se cargan los componentes de objeto rigido para el conejo y demas cuestiones del nivel
     private void Awake()
     {
-        animator.SetBool("isAlive", true);
+        animator.SetBool(IsAlive, true);
         sharedInstance = this;
-        rigidBody = GetComponent<Rigidbody2D>();
-        startPosition = transform.position;
+        _rigidBody = GetComponent<Rigidbody2D>();
+        _startPosition = transform.position;
     }
 
     // Update is called once per frame//se actualiza aprox 60 veces por segundo
     private void Update()
     {
         if (GameManager.sharedInstance.currentGameState == GameState.inTheGame)
-            if (Input.GetMouseButtonDown(0))
-            {
-                Debug.Log("Boton izquierdo del raton pulsado"); //comprueba que si se oprime el mouse click salta
+            if (Input.GetKey("Space"))
                 Jump();
-            }
 
-        animator.SetBool("isGrounded", IsOnTheFloor());
+
+        animator.SetBool(IsGrounded, IsOnTheFloor());
     }
 
     //velocidad del conejo en el eje x constante para un intervalo equivalente de tiempo
     private void FixedUpdate()
     {
-        // if (GameManager.sharedInstance.currentGameState == GameState.inTheGame)
-        //     if (rigidBody.velocity.x < runningSpeed)
-        //         rigidBody.velocity = new Vector2(runningSpeed, rigidBody.velocity.y);
+        if (GameManager.sharedInstance.currentGameState != GameState.inTheGame) return;
+        if (_rigidBody.velocity.x < runningSpeed)
+            _rigidBody.velocity = new Vector2(runningSpeed, _rigidBody.velocity.y);
     }
 
     // Use this for initialization
     public void StartGame()
     {
-        animator.SetBool("isAlive", true); //setea si esta vivo
-        transform.position = startPosition;
-        rigidBody.velocity = new Vector2(0, 0);
+        animator.SetBool(IsAlive, true); //setea si esta vivo
+        transform.position = _startPosition;
+        _rigidBody.velocity = new Vector2(0, 0);
     }
 
     private void Jump() //permite saltar
     {
         if (IsOnTheFloor())
-            rigidBody.AddForce(Vector2.up * jumpForce,
+            _rigidBody.AddForce(Vector2.up * jumpForce,
                 ForceMode2D.Impulse); //le adiciona una fuerza de impulso al cuerpo rigido hacia arriba
     }
 
@@ -68,14 +68,14 @@ public class PlayerController : MonoBehaviour
     public void KillPlayer()
     {
         GameManager.sharedInstance.GameOver();
-        animator.SetBool("isAlive", false);
+        animator.SetBool(IsAlive, false);
 
-        if (PlayerPrefs.GetFloat(highScoreKey, 0) < GetDistance()) PlayerPrefs.SetFloat(highScoreKey, GetDistance());
+        if (PlayerPrefs.GetFloat(HighScoreKey, 0) < GetDistance()) PlayerPrefs.SetFloat(HighScoreKey, GetDistance());
     }
 
     public float GetDistance()
     {
-        var distanceTravelled = Vector2.Distance(new Vector2(startPosition.x, 0),
+        var distanceTravelled = Vector2.Distance(new Vector2(_startPosition.x, 0),
             new Vector2(transform.position.x, 0));
 
         return distanceTravelled;
