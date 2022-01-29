@@ -2,11 +2,11 @@
 
 public class CameraFollow : MonoBehaviour
 {
-    public Vector2 offset = new(0.12f, 0.12f);
+    public Vector2 offset = new(0f, 0f);
 
     public float dampTime = 0.4f;
     public Transform target;
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 _velocity = Vector3.zero;
 
 
     private void Awake()
@@ -24,7 +24,7 @@ public class CameraFollow : MonoBehaviour
 
         destination = new Vector3(destination.x, offset.y, destination.z);
 
-        transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
+        transform.position = Vector3.SmoothDamp(transform.position, destination, ref _velocity, dampTime);
     }
 
 

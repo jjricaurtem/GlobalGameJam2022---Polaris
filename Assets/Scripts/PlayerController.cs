@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (GameManager.sharedInstance.currentGameState == GameState.inTheGame)
-            if (Input.GetKey("Space"))
+            if (Input.GetKeyDown("space"))
                 Jump();
 
 
