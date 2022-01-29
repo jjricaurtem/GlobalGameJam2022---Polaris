@@ -31,7 +31,7 @@ public class LevelGenerator : MonoBehaviour
     public void GenerateInitialBlocks()
     {
         _isGeneratingInitialBlocks = true;
-        for (var i = 0; i < 3; i++)
+        for (var i = 0; i < 9; i++)
         {
             AddNewBlock();
             _isGeneratingInitialBlocks = false;
