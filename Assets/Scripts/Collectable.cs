@@ -1,34 +1,32 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Collectable : MonoBehaviour {
+public class Collectable : MonoBehaviour
+{
+    private bool isCollected;
 
+    private void OnTriggerEnter2D(Collider2D otherCollider)
+    {
+        if (otherCollider.tag == "Player") CollectCoin();
+    }
 
-	 bool isCollected = false ;
+    private void ShowCoin()
+    {
+        GetComponent<SpriteRenderer>().enabled = true;
+        GetComponent<CircleCollider2D>().enabled = true;
+        isCollected = false;
+    }
 
-	void ShowCoin() {
-		this.GetComponent<SpriteRenderer> ().enabled = true;
-		this.GetComponent<CircleCollider2D> ().enabled = true;
-		isCollected = false;
-	}
+    private void HideCoin()
+    {
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<CircleCollider2D>().enabled = false;
+    }
 
-	void HideCoin() {
-		this.GetComponent<SpriteRenderer> ().enabled = false;
-		this.GetComponent<CircleCollider2D> ().enabled = false;
-
-		}
-
-	void CollectCoin() {
-		isCollected = true;
-		HideCoin ();
-		//notifica al manager que se recogio la moneda
-		GameManager.sharedInstance.CollectCoin();
-	}
-
-	void OnTriggerEnter2D(Collider2D otherCollider){
-
-		if (otherCollider.tag == "Player") {
-			CollectCoin ();
-		}
-	}
+    private void CollectCoin()
+    {
+        isCollected = true;
+        HideCoin();
+        //notifica al manager que se recogio la moneda
+        GameManager.sharedInstance.CollectCoin();
+    }
 }

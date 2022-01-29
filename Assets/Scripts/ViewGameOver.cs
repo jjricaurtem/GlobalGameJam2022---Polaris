@@ -1,36 +1,32 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-public class ViewGameOver : MonoBehaviour {
+public class ViewGameOver : MonoBehaviour
+{
+    public static ViewGameOver sharedInstance;
 
-	public static ViewGameOver sharedInstance;
+    public Text coinLabel;
 
-	public Text coinLabel;
+    public Text scoreLabel;
 
-	public Text scoreLabel;
-
-	void Awake (){
-
-		sharedInstance = this;
-
-	}
-
-
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private void Awake()
+    {
+        sharedInstance = this;
+    }
 
 
-	public void UpdateUI (){
-		if (GameManager.sharedInstance.currentGameState == GameState.gameOver) {
-			coinLabel.text = GameManager.sharedInstance.collectedCoins.ToString ();
-			scoreLabel.text = PlayerController.sharedInstance.GetDistance ().ToString ("f0");
-		}
+    // Update is called once per frame
+    private void Update()
+    {
+    }
 
 
-
-
-	}
+    public void UpdateUI()
+    {
+        if (GameManager.sharedInstance.currentGameState == GameState.gameOver)
+        {
+            coinLabel.text = GameManager.sharedInstance.collectedCoins.ToString();
+            scoreLabel.text = PlayerController.sharedInstance.GetDistance().ToString("f0");
+        }
+    }
 }
