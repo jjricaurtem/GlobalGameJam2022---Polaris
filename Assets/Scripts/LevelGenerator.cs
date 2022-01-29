@@ -3,20 +3,13 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    /*
-     * 
-     * 
-     * variables publicas del generador de niveles
-     * 
-    */
-
     public static LevelGenerator sharedInstance; //instancia compartida que permite tener un unico generador de niveles
 
     public List<LevelBlock> allTheLevelBlocks = new(); //lista que contiene todos los niveles creados
     public List<LevelBlock> currentLevelBlocks = new(); //lista de bloques actuales
     public Transform levelInitialPoint; //punto inicial donde se genera el primer nivel de todos
 
-    private bool isGeneratingInitialBlocks;
+    private bool _isGeneratingInitialBlocks;
 
     private void Awake()
     {
@@ -37,9 +30,13 @@ public class LevelGenerator : MonoBehaviour
 
     public void GenerateInitialBlocks()
     {
-        isGeneratingInitialBlocks = true;
-        for (var i = 0; i < 3; i++) AddNewBlock();
-        isGeneratingInitialBlocks = false;
+        _isGeneratingInitialBlocks = true;
+        for (var i = 0; i < 3; i++)
+        {
+            AddNewBlock();
+            _isGeneratingInitialBlocks = false;
+        }
+
     }
 
     public void AddNewBlock()
@@ -47,7 +44,7 @@ public class LevelGenerator : MonoBehaviour
         //seleccionar un bloque aleatorio dentro de los disponibles 
         var randomIndex = Random.Range(0, allTheLevelBlocks.Count);
 
-        if (isGeneratingInitialBlocks) randomIndex = 0;
+        if (_isGeneratingInitialBlocks) randomIndex = 0;
 
         var block = Instantiate(allTheLevelBlocks[randomIndex]);
         block.transform.SetParent(transform, false);
@@ -56,8 +53,13 @@ public class LevelGenerator : MonoBehaviour
         var blockPosition = Vector3.zero;
         if (currentLevelBlocks.Count == 0) //vamos a colocar el primer elemento en pantalla
             blockPosition = levelInitialPoint.position;
-        else //empalme de bloques en pantalla
-            blockPosition = currentLevelBlocks[currentLevelBlocks.Count - 1].exitPoint.position;
+        else
+        {
+            var previousBlock = currentLevelBlocks[^1];
+            blockPosition = previousBlock.exitPoint.position;
+            blockPosition.x += block.blockWidth / 2;
+        }
+
         block.transform.position = blockPosition;
         currentLevelBlocks.Add(block);
     }
