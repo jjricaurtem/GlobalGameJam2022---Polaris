@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4471188257042669201}
   - component: {fileID: 1166530428}
   m_Layer: 6
-  m_Name: Terrain1
+  m_Name: Terrain1_block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

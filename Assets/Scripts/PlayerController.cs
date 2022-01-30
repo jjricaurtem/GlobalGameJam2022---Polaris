@@ -7,20 +7,22 @@ public class PlayerController : MonoBehaviour
     private static readonly int IsGrounded = Animator.StringToHash("isGrounded");
     private static readonly int IsAlive = Animator.StringToHash("isAlive");
 
-    public float jumpForce = 6.0f; //fuerza de salto
-    public float runningSpeed = 3.0f; //vector para correr en direccion x
+    public float jumpForce = 6.0f;
+    public float runningSpeed = 3.0f;
+    [SerializeField] private float groundDistanceToJump = 0.2f;
     public LayerMask groundLayerMask; //capa del suelo
     public Animator animator;
-    private Rigidbody2D _rigidBody;
+    public Rigidbody2D rigidBody;
 
     private Vector3 _startPosition;
+    public bool bounce = false;
 
     //se cargan los componentes de objeto rigido para el conejo y demas cuestiones del nivel
     private void Awake()
     {
         animator.SetBool(IsAlive, true);
         sharedInstance = this;
-        _rigidBody = GetComponent<Rigidbody2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
         _startPosition = transform.position;
     }
 
@@ -39,8 +41,12 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         if (GameManager.sharedInstance.currentGameState != GameState.inTheGame) return;
-        if (_rigidBody.velocity.x < runningSpeed)
-            _rigidBody.velocity = new Vector2(runningSpeed, _rigidBody.velocity.y);
+        if (rigidBody.velocity.x < runningSpeed)
+            rigidBody.velocity = new Vector2(runningSpeed, rigidBody.velocity.y);
+        if (transform.position.y > 1.5f) {
+            rigidBody.AddForce(Vector2.down * jumpForce,
+                ForceMode2D.Impulse); //le adiciona una fuerza de impulso al cuerpo rigido hacia abajo
+        }
     }
 
     // Use this for initialization
@@ -48,21 +54,20 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetBool(IsAlive, true); //setea si esta vivo
         transform.position = _startPosition;
-        _rigidBody.velocity = new Vector2(0, 0);
+        rigidBody.velocity = new Vector2(0, 0);
     }
 
     private void Jump() //permite saltar
     {
         if (IsOnTheFloor())
-            _rigidBody.AddForce(Vector2.up * jumpForce,
+            rigidBody.AddForce(Vector2.up * jumpForce,
                 ForceMode2D.Impulse); //le adiciona una fuerza de impulso al cuerpo rigido hacia arriba
     }
 
     private bool IsOnTheFloor()
     {
-        if (Physics2D.Raycast(transform.position, Vector2.down, 1.0f, groundLayerMask.value))
-            return true; //comprueba si hay un vector de magnitud 1 desde el conejo al suelo para dejarlo saltar
-        return false;
+        return Physics2D.Raycast(transform.position, Vector2.down, 
+            groundDistanceToJump, groundLayerMask.value);
     }
 
     public void KillPlayer()
