@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
     private const string HighScoreKey = "highScore";
     public static PlayerController sharedInstance;
     private static readonly int IsGrounded = Animator.StringToHash("isGrounded");
-    private static readonly int IsAlive = Animator.StringToHash("isAlive");
+    public static readonly int IsAlive = Animator.StringToHash("isAlive");
 
     public float jumpForce = 6.0f;
     public float runningSpeed = 3.0f;
@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (GameManager.sharedInstance.currentGameState == GameState.inTheGame)
-            if (Input.GetKeyDown("space"))
+            if (Input.GetKeyDown("space") || Input.GetMouseButtonDown(0))
                 Jump();
 
 
@@ -84,5 +84,10 @@ public class PlayerController : MonoBehaviour
             new Vector2(transform.position.x, 0));
 
         return distanceTravelled;
+    }
+
+    public void OnDieComplete()
+    {
+        GameManager.sharedInstance.currentGameState = GameState.gameOver;
     }
 }
