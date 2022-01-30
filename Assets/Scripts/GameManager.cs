@@ -4,6 +4,7 @@ public enum GameState
 {
     //estados del juego
     menu,
+    Intro,
     inTheGame,
     Dying,
     gameOver
