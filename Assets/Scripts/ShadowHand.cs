@@ -10,7 +10,7 @@ public class ShadowHand : MonoBehaviour
         if (collider.tag.Equals("Player"))
         {
             GameManager.sharedInstance.currentGameState = GameState.Dying;
-            PlayerController.sharedInstance.animator.SetBool(PlayerController.IsAlive, false);
+            PlayerController.sharedInstance.KillPlayer();
         }
     }
 

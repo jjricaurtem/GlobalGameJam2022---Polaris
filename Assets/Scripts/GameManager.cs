@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public enum GameState
 {
@@ -58,8 +60,12 @@ public class GameManager : MonoBehaviour
     {
         //se llama cuando el jugador muere
         ChangeGameState(GameState.gameOver);
-        LevelGenerator.sharedInstance.RemoveAllTheBlocks();
-        ViewGameOver.sharedInstance.UpdateUI();
+        IEnumerator loadSceneWaitCoroutine()
+        {
+            yield return new WaitForSeconds(6.5f);// Wait for one second
+            RestartGame();
+        }
+        StartCoroutine(loadSceneWaitCoroutine());
     }
 
     public void BackToMainMenu()
@@ -100,5 +106,11 @@ public class GameManager : MonoBehaviour
     {
         collectedCoins++;
         ViewInGame.sharedInstance.UpdateCoinsLabel();
+    }
+    
+    private void RestartGame()
+    {
+        //para empezar la partida
+        SceneManager.LoadScene("SampleScene");
     }
 }

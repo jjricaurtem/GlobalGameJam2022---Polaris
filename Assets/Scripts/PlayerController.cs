@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -91,8 +92,14 @@ public class PlayerController : MonoBehaviour
 
     public void KillPlayer()
     {
-        GameManager.sharedInstance.GameOver();
         animator.SetBool(IsAlive, false);
+        IEnumerator gameOverWaitCoroutine()
+        {
+            yield return new WaitForSeconds(5f);// Wait for one second
+            GameManager.sharedInstance.GameOver();
+        }
+        StartCoroutine(gameOverWaitCoroutine());
+        
 
         if (PlayerPrefs.GetFloat(HighScoreKey, 0) < GetDistance()) PlayerPrefs.SetFloat(HighScoreKey, GetDistance());
     }
