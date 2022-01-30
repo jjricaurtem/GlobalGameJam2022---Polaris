@@ -41,10 +41,10 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         if (GameManager.sharedInstance.currentGameState != GameState.inTheGame) return;
-        if (_rigidBody.velocity.x < runningSpeed)
-            _rigidBody.velocity = new Vector2(runningSpeed, _rigidBody.velocity.y);
+        if (rigidBody.velocity.x < runningSpeed)
+            rigidBody.velocity = new Vector2(runningSpeed, rigidBody.velocity.y);
         if (transform.position.y > 1.5f) {
-            _rigidBody.AddForce(Vector2.down * jumpForce,
+            rigidBody.AddForce(Vector2.down * jumpForce,
                 ForceMode2D.Impulse); //le adiciona una fuerza de impulso al cuerpo rigido hacia abajo
         }
     }
