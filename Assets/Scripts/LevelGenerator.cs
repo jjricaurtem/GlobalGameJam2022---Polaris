@@ -31,7 +31,7 @@ public class LevelGenerator : MonoBehaviour
     public void GenerateInitialBlocks()
     {
         _isGeneratingInitialBlocks = true;
-        for (var i = 0; i < 9; i++)
+        for (var i = 0; i < 3; i++)
         {
             AddNewBlock();
             _isGeneratingInitialBlocks = false;
@@ -66,6 +66,7 @@ public class LevelGenerator : MonoBehaviour
 
     public void RemoveOldBlock()
     {
+        if (currentLevelBlocks.Count <= 4) return;
         var block = currentLevelBlocks[0];
         currentLevelBlocks.Remove(block);
         Destroy(block.gameObject);
