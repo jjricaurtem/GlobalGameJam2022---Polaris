@@ -32,16 +32,16 @@ public class GameManager : MonoBehaviour
     {
         //llama el metodo start game
         //TODO: Check currentGameState = GameState.menu;
-        menuCanvas.enabled = true;
+        menuCanvas.enabled = false;
         //TODO: Check gameCanvas.enabled = false;
         //TODO: Check gameOverCanvas.enabled = false;
     }
 
     private void Update()
     {
-        if (Input.GetButtonDown("Submit"))
-            if (currentGameState != GameState.inTheGame)
-                StartGame();
+        // if (Input.GetButtonDown("Submit"))
+        //     if (currentGameState != GameState.inTheGame)
+        //         StartGame();
     }
 
     // se llama para iniciar la partida

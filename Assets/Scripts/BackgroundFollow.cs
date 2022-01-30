@@ -22,7 +22,6 @@ public class BackgroundFollow : MonoBehaviour
     {
         var pos = transform.parent.position.x - _startParentPositionX;
         var offset = (int)(pos / 5);
-        Debug.Log(offset);
         transform.localPosition = new Vector2(_startPositionX - offset / 100f, transform.localPosition.y);
     }
 

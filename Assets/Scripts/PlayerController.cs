@@ -15,7 +15,9 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rigidBody;
 
     private Vector3 _startPosition;
-    public bool bounce = false;
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip stepSound;
+    private AudioSource _audioSource;
 
     //se cargan los componentes de objeto rigido para el conejo y demas cuestiones del nivel
     private void Awake()
@@ -24,17 +26,30 @@ public class PlayerController : MonoBehaviour
         sharedInstance = this;
         rigidBody = GetComponent<Rigidbody2D>();
         _startPosition = transform.position;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame//se actualiza aprox 60 veces por segundo
     private void Update()
     {
         if (GameManager.sharedInstance.currentGameState == GameState.inTheGame)
+        {
+            var isOnTheFloor = IsOnTheFloor();
             if (Input.GetKeyDown("space") || Input.GetMouseButtonDown(0))
                 Jump();
+            // else if (_audioSource.clip != stepSound && isOnTheFloor)
+            // {
+            //     _audioSource.clip = stepSound;
+            //     _audioSource.loop = true;
+            //     _audioSource.Play();
+            // }
 
-
-        animator.SetBool(IsGrounded, IsOnTheFloor());
+            animator.SetBool(IsGrounded, isOnTheFloor);
+        }
+        else
+        {
+            _audioSource.Stop();
+        }
     }
 
     //velocidad del conejo en el eje x constante para un intervalo equivalente de tiempo
@@ -57,11 +72,15 @@ public class PlayerController : MonoBehaviour
         rigidBody.velocity = new Vector2(0, 0);
     }
 
-    private void Jump() //permite saltar
+    private void Jump()
     {
-        if (IsOnTheFloor())
-            rigidBody.AddForce(Vector2.up * jumpForce,
-                ForceMode2D.Impulse); //le adiciona una fuerza de impulso al cuerpo rigido hacia arriba
+        if (!IsOnTheFloor()) return;
+        
+        rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        _audioSource.Stop();
+        _audioSource.clip = jumpSound;
+        _audioSource.loop = false;
+        _audioSource.Play();
     }
 
     private bool IsOnTheFloor()
