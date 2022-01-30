@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviour
         if (GameManager.sharedInstance.currentGameState != GameState.inTheGame) return;
         if (_rigidBody.velocity.x < runningSpeed)
             _rigidBody.velocity = new Vector2(runningSpeed, _rigidBody.velocity.y);
+        if (transform.position.y > 1.5f) {
+            _rigidBody.AddForce(Vector2.down * jumpForce,
+                ForceMode2D.Impulse); //le adiciona una fuerza de impulso al cuerpo rigido hacia abajo
+        }
     }
 
     // Use this for initialization
@@ -60,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
     private bool IsOnTheFloor()
     {
-        if (Physics2D.Raycast(transform.position, Vector2.down, 1.0f, groundLayerMask.value))
+        if (Physics2D.Raycast(transform.position, Vector2.down, 0.5f, groundLayerMask.value))
             return true; //comprueba si hay un vector de magnitud 1 desde el conejo al suelo para dejarlo saltar
         return false;
     }
