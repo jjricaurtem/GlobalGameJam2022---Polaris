@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4471188257042669200}
   - component: {fileID: 4471188257042669201}
   - component: {fileID: 1166530428}
+  - component: {fileID: 3068542256167689617}
   m_Layer: 6
   m_Name: Terrain1
   m_TagString: Untagged
@@ -111,3 +112,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32, y: 0.28390697}
   m_EdgeRadius: 0
+--- !u!114 &3068542256167689617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4471188257042669203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 066cd86baac74b14694c37506dbec7a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yDifferenceRank: 0.4
+  bouncyAmount: 0.5

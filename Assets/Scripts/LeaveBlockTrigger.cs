@@ -4,6 +4,7 @@ public class LeaveBlockTrigger : MonoBehaviour
 {
     public void OnTriggerEnter2D(Collider2D collider)
     {
+        if (!collider.tag.Equals("Player")) return;
         LevelGenerator.sharedInstance.AddNewBlock();
         LevelGenerator.sharedInstance.RemoveOldBlock();
     }
