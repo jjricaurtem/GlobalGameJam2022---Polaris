@@ -22,6 +22,7 @@ public class IntroManager : MonoBehaviour
         foreach (var go in objectToEnable) go.SetActive(true);
         _cameraFollow.enabled = true;
         gameObject.SetActive(false);
-        GameManager.sharedInstance.currentGameState = GameState.inTheGame;
+        GameManager.sharedInstance.StartGame();
+        //GameManager.sharedInstance.currentGameState = GameState.inTheGame;
     }
 }

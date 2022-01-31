@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
         PlayerController.sharedInstance.StartGame();
         LevelGenerator.sharedInstance.GenerateInitialBlocks();
         ChangeGameState(GameState.inTheGame);
-        ViewInGame.sharedInstance.UpdateHighScoreLabel();
+        // ViewInGame.sharedInstance.UpdateHighScoreLabel();
     }
 
     public void GameOver()

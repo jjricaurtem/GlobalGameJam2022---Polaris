@@ -20,7 +20,6 @@ public class LevelGenerator : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        GenerateInitialBlocks();
     }
 
     // Update is called once per frame
