@@ -7,7 +7,7 @@ public class BouncyObstacle : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D colliderObject)
     {
-        if (!colliderObject.tag.Equals("Frontal")) return;
+        if (!colliderObject.tag.Equals("Player")) return;
 
         var temp = PlayerController.sharedInstance.transform;
         temp.position = new Vector3(temp.position.x - bouncyAmount, temp.position.y);
