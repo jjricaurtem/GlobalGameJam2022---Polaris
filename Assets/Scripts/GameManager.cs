@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public enum GameState
 {
@@ -32,24 +32,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //llama el metodo start game
         //TODO: Check currentGameState = GameState.menu;
         menuCanvas.enabled = false;
         //TODO: Check gameCanvas.enabled = false;
         //TODO: Check gameOverCanvas.enabled = false;
     }
 
-    private void Update()
-    {
-        // if (Input.GetButtonDown("Submit"))
-        //     if (currentGameState != GameState.inTheGame)
-        //         StartGame();
-    }
+    public event Action<GameState> OnGameStateChangeEvent;
 
-    // se llama para iniciar la partida
     public void StartGame()
     {
-        //para empezar la partida
         PlayerController.sharedInstance.StartGame();
         LevelGenerator.sharedInstance.GenerateInitialBlocks();
         ChangeGameState(GameState.inTheGame);
@@ -58,45 +50,41 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        //se llama cuando el jugador muere
         ChangeGameState(GameState.gameOver);
-        IEnumerator loadSceneWaitCoroutine()
-        {
-            yield return new WaitForSeconds(6.5f);// Wait for one second
-            RestartGame();
-        }
-        StartCoroutine(loadSceneWaitCoroutine());
     }
 
     public void BackToMainMenu()
     {
-        //se llama cuando el jugador decide finalizar y volver al menu principal
         ChangeGameState(GameState.menu);
     }
 
     private void ChangeGameState(GameState newGameState)
     {
-        if (newGameState == GameState.menu)
+        OnGameStateChangeEvent?.Invoke(newGameState);
+        switch (newGameState)
         {
-            menuCanvas.enabled = true;
-            gameCanvas.enabled = false;
-            gameOverCanvas.enabled = false;
+            case GameState.menu:
+                menuCanvas.enabled = true;
+                gameCanvas.enabled = false;
+                gameOverCanvas.enabled = false;
 
-            //la escena nos debera mostrar el menu principal
-        }
-        else if (newGameState == GameState.inTheGame)
-        {
-            //la escena de unity nos mostrara el juego en si
-            menuCanvas.enabled = false;
-            gameCanvas.enabled = true;
-            gameOverCanvas.enabled = false;
-        }
-        else if (newGameState == GameState.gameOver)
-        {
-            //la escena debe mostrar la pantalla de fin de la partida
-            menuCanvas.enabled = false;
-            gameCanvas.enabled = false;
-            gameOverCanvas.enabled = true;
+                break;
+            case GameState.inTheGame:
+                menuCanvas.enabled = false;
+                gameCanvas.enabled = true;
+                gameOverCanvas.enabled = false;
+                break;
+            case GameState.gameOver:
+                menuCanvas.enabled = false;
+                gameCanvas.enabled = false;
+                gameOverCanvas.enabled = true;
+                break;
+            case GameState.Intro:
+                break;
+            case GameState.Dying:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(newGameState), newGameState, null);
         }
 
         currentGameState = newGameState;
@@ -107,10 +95,9 @@ public class GameManager : MonoBehaviour
         collectedCoins++;
         ViewInGame.sharedInstance.UpdateCoinsLabel();
     }
-    
-    private void RestartGame()
+
+    public static void RestartGame()
     {
-        //para empezar la partida
         SceneManager.LoadScene("SampleScene");
     }
 }

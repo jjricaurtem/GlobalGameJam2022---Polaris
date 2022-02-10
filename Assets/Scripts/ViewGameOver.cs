@@ -1,32 +1,43 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
+using UnityEngine;
 
 public class ViewGameOver : MonoBehaviour
 {
-    public static ViewGameOver sharedInstance;
-
-    public Text coinLabel;
-
-    public Text scoreLabel;
+    [SerializeField] private ScoreRow scoreRowPrefab;
+    [SerializeField] private Transform scoreBoardView;
+    private Scoreboard _scoreboard;
 
     private void Awake()
     {
-        sharedInstance = this;
+        _scoreboard ??= GetComponent<Scoreboard>();
     }
 
+    private void Start()
+    {
+        GameManager.sharedInstance.OnGameStateChangeEvent += OnGameStateChangeEvent;
+    }
 
-    // Update is called once per frame
     private void Update()
     {
+        if (GameManager.sharedInstance.currentGameState == GameState.gameOver &&
+            (Input.GetKeyDown("space") || Input.GetMouseButtonDown(0)))
+            GameManager.RestartGame();
     }
 
-
-    public void UpdateUI()
+    private void OnDestroy()
     {
-        if (GameManager.sharedInstance.currentGameState == GameState.gameOver)
-        {
-            coinLabel.text = GameManager.sharedInstance.collectedCoins.ToString();
-            scoreLabel.text = PlayerController.sharedInstance.GetDistance().ToString("f0");
-        }
+        GameManager.sharedInstance.OnGameStateChangeEvent -= OnGameStateChangeEvent;
+    }
+
+    private void OnGameStateChangeEvent(GameState newGameState)
+    {
+        if (newGameState == GameState.gameOver) UpdateScores();
+    }
+
+    private void UpdateScores()
+    {
+        _scoreboard.UpdateScore((int)Math.Ceiling(PlayerController.sharedInstance.GetDistance()));
+        var scores = _scoreboard.RetrieveScores();
+        foreach (var score in scores) Instantiate(scoreRowPrefab, scoreBoardView).Initialize(score.document);
     }
 }
