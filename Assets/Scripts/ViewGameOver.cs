@@ -36,8 +36,13 @@ public class ViewGameOver : MonoBehaviour
 
     private void UpdateScores()
     {
-        _scoreboard.UpdateScore((int)Math.Ceiling(PlayerController.sharedInstance.GetDistance()));
-        var scores = _scoreboard.RetrieveScores();
-        foreach (var score in scores) Instantiate(scoreRowPrefab, scoreBoardView).Initialize(score.document);
+        var finalScore = (int)Math.Ceiling(PlayerController.sharedInstance.GetDistance());
+        StartCoroutine(Scoreboard.UpdateScore(finalScore, () =>
+        {
+            StartCoroutine(Scoreboard.RetrieveScores((root) =>
+            {
+                foreach (var score in root.answer) Instantiate(scoreRowPrefab, scoreBoardView).Initialize(score);
+            }));
+        }));
     }
 }

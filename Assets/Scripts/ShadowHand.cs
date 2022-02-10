@@ -7,11 +7,9 @@ public class ShadowHand : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.tag.Equals("Player"))
-        {
-            GameManager.sharedInstance.currentGameState = GameState.Dying;
-            PlayerController.sharedInstance.KillPlayer();
-        }
+        if (!collider.tag.Equals("Player") || GameManager.sharedInstance.currentGameState == GameState.Dying) return;
+        GameManager.sharedInstance.currentGameState = GameState.Dying;
+        PlayerController.sharedInstance.KillPlayer();
     }
 
     // Update is called once per frame

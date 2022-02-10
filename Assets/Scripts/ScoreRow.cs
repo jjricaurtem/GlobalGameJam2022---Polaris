@@ -7,10 +7,10 @@ public class ScoreRow : MonoBehaviour
     [SerializeField] private Text scoreText;
 
 
-    public void Initialize(Document document)
+    public void Initialize(Score score)
     {
-        nameText.text = document.fields.name.stringValue;
-        scoreText.text = document.fields.score.stringValue;
+        nameText.text = score.name.stringValue;
+        scoreText.text = score.score.integerValue.ToString();
     }
 
 }
