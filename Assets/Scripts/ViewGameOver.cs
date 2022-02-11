@@ -1,10 +1,14 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ViewGameOver : MonoBehaviour
 {
     [SerializeField] private ScoreRow scoreRowPrefab;
-    [SerializeField] private Transform scoreBoardView;
+    [SerializeField] private GameObject scoreBoardView;
+    [SerializeField] private GameObject saveScorePanel;
+    [SerializeField] private Text scoreText;
+    [SerializeField] private Text playerNameInput;
     private Scoreboard _scoreboard;
 
     private void Awake()
@@ -17,31 +21,37 @@ public class ViewGameOver : MonoBehaviour
         GameManager.sharedInstance.OnGameStateChangeEvent += OnGameStateChangeEvent;
     }
 
-    private void Update()
-    {
-        if (GameManager.sharedInstance.currentGameState == GameState.gameOver &&
-            (Input.GetKeyDown("space") || Input.GetMouseButtonDown(0)))
-            GameManager.RestartGame();
-    }
-
     private void OnDestroy()
     {
         GameManager.sharedInstance.OnGameStateChangeEvent -= OnGameStateChangeEvent;
     }
 
+    public void OnSaveScore()
+    {
+        UpdateScores();
+        saveScorePanel.SetActive(false);
+        scoreBoardView.SetActive(true);
+    }
+    
     private void OnGameStateChangeEvent(GameState newGameState)
     {
-        if (newGameState == GameState.gameOver) UpdateScores();
+        if (newGameState == GameState.gameOver)
+        {
+            var finalScore = (int)Math.Ceiling(PlayerController.sharedInstance.GetDistance());
+            saveScorePanel.SetActive(true);
+            scoreText.text = finalScore.ToString();
+            scoreBoardView.SetActive(false);
+        }
     }
 
     private void UpdateScores()
     {
         var finalScore = (int)Math.Ceiling(PlayerController.sharedInstance.GetDistance());
-        StartCoroutine(Scoreboard.UpdateScore(finalScore, () =>
+        StartCoroutine(Scoreboard.UpdateScore(finalScore, playerNameInput.text, () =>
         {
             StartCoroutine(Scoreboard.RetrieveScores((root) =>
             {
-                foreach (var score in root.answer) Instantiate(scoreRowPrefab, scoreBoardView).Initialize(score);
+                foreach (var score in root.answer) Instantiate(scoreRowPrefab, scoreBoardView.transform).Initialize(score);
             }));
         }));
     }
